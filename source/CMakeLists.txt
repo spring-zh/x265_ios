@@ -147,7 +147,7 @@ if(APPLE)
   add_definitions(-DMACOS=1)
 endif()
 
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "AppleClang")
     set(CLANG 1)
 endif()
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Intel")
@@ -551,6 +551,12 @@ if((MSVC_IDE OR XCODE OR GCC) AND ENABLE_ASSEMBLY)
         set(SUFFIX o)
     endif()
 
+    if(ASM_COMPILER)
+        string(REGEX REPLACE " " ";" ASM_COMPILER ${ASM_COMPILER})
+    else()
+        set(ASM_COMPILER ${CMAKE_CXX_COMPILER})
+    endif()
+    
     if(ARM OR CROSS_COMPILE_ARM)
     # compile ARM arch asm files here
         enable_language(ASM)
@@ -560,7 +566,7 @@ if((MSVC_IDE OR XCODE OR GCC) AND ENABLE_ASSEMBLY)
             list(APPEND ASM_OBJS ${ASM}.${SUFFIX})
             add_custom_command(
                 OUTPUT ${ASM}.${SUFFIX}
-                COMMAND ${CMAKE_CXX_COMPILER}
+                COMMAND ${ASM_COMPILER}
                 ARGS ${ARM_ARGS} -c ${ASM_SRC} -o ${ASM}.${SUFFIX}
                 DEPENDS ${ASM_SRC})
         endforeach()
@@ -573,7 +579,7 @@ if((MSVC_IDE OR XCODE OR GCC) AND ENABLE_ASSEMBLY)
             list(APPEND ASM_OBJS ${ASM}.${SUFFIX})
             add_custom_command(
                 OUTPUT ${ASM}.${SUFFIX}
-                COMMAND ${CMAKE_CXX_COMPILER}
+                COMMAND ${ASM_COMPILER}
                 ARGS ${ARM_ARGS} ${ASM_FLAGS} -c ${ASM_SRC} -o ${ASM}.${SUFFIX}
                 DEPENDS ${ASM_SRC})
         endforeach()
