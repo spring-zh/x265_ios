@@ -57,6 +57,7 @@
 #
 # PLATFORM: (default "OS64")
 #    OS = Build for iPhoneOS.
+#    OSV7 = Build for armv7 iPhoneOS.
 #    OS64 = Build for arm64 iphoneOS.
 #    OS64COMBINED = Build for arm64 x86_64 iphoneOS + iphoneOS Simulator. Combined into FAT STATIC lib (only supported on 3.14+ of CMake with "-G Xcode" argument in combination with the "cmake --install" CMake build step)
 #    SIMULATOR = Build for x86 i386 iphoneOS Simulator.
@@ -102,6 +103,7 @@
 #
 # ARCHS: (armv7 armv7s armv7k arm64 arm64_32 i386 x86_64) If specified, will override the default architectures for the given PLATFORM
 #    OS = armv7 armv7s arm64 (if applicable)
+#    OSV7 = Build for armv7 iPhoneOS.
 #    OS64 = arm64 (if applicable)
 #    SIMULATOR = i386
 #    SIMULATOR64 = x86_64
@@ -153,7 +155,7 @@ set(ENV{_IOS_TOOLCHAIN_HAS_RUN} true)
 
 # List of supported platform values
 list(APPEND _supported_platforms
-        "OS" "OS64" "OS64COMBINED" "SIMULATOR" "SIMULATOR64" "SIMULATORARM64"
+        "OS" "OSV7" "OS64" "OS64COMBINED" "SIMULATOR" "SIMULATOR64" "SIMULATORARM64"
         "TVOS" "TVOSCOMBINED" "SIMULATOR_TVOS"
         "WATCHOS" "WATCHOSCOMBINED" "SIMULATOR_WATCHOS"
         "MAC" "MAC_ARM64" "MAC_UNIVERSAL"
@@ -302,6 +304,14 @@ if(PLATFORM_INT STREQUAL "OS")
     set(APPLE_TARGET_TRIPLE_INT arm-apple-ios${DEPLOYMENT_TARGET})
   else()
     set(APPLE_TARGET_TRIPLE_INT ${ARCHS_SPLIT}-apple-ios${DEPLOYMENT_TARGET})  
+  endif()
+elseif(PLATFORM_INT STREQUAL "OSV7")
+  set(SDK_NAME iphoneos)
+  if(NOT ARCHS)
+    set(ARCHS armv7)
+    set(APPLE_TARGET_TRIPLE_INT arm-apple-ios${DEPLOYMENT_TARGET})
+  else()
+    set(APPLE_TARGET_TRIPLE_INT ${ARCHS_SPLIT}-apple-ios${DEPLOYMENT_TARGET})
   endif()
 elseif(PLATFORM_INT STREQUAL "OS64")
   set(SDK_NAME iphoneos)
@@ -726,7 +736,7 @@ endif()
 # -m${SDK_NAME}-version-min flags, older versions of Xcode use:
 # -m(ios/ios-simulator)-version-min instead.
 if(${CMAKE_VERSION} VERSION_LESS "3.11")
-  if(PLATFORM_INT STREQUAL "OS" OR PLATFORM_INT STREQUAL "OS64")
+  if(PLATFORM_INT STREQUAL "OS" OR PLATFORM_INT STREQUAL "OSV7" OR PLATFORM_INT STREQUAL "OS64")
     if(XCODE_VERSION_INT VERSION_LESS 7.0)
       set(SDK_NAME_VERSION_FLAGS
               "-mios-version-min=${DEPLOYMENT_TARGET}")

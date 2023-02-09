@@ -1156,11 +1156,11 @@ endfunc
 function x265_pixel_satd_8x16_neon
     vpush           {d8-d11}
     mov             ip, lr
-    bl              x265_satd_8x8_neon
+    bl              _x265_satd_8x8_neon
     vadd.u16        q4, q12, q13
     vadd.u16        q5, q14, q15
 
-    bl              x265_satd_8x8_neon
+    bl              _x265_satd_8x8_neon
     vadd.u16        q4, q4, q12
     vadd.u16        q5, q5, q13
     vadd.u16        q4, q4, q14
@@ -1177,11 +1177,11 @@ endfunc
 function x265_pixel_satd_8x32_neon
     vpush           {d8-d11}
     mov             ip, lr
-    bl              x265_satd_8x8_neon
+    bl              _x265_satd_8x8_neon
     vadd.u16        q4, q12, q13
     vadd.u16        q5, q14, q15
 .rept 3
-    bl              x265_satd_8x8_neon
+    bl              _x265_satd_8x8_neon
     vadd.u16        q4, q4, q12
     vadd.u16        q5, q5, q13
     vadd.u16        q4, q4, q14
@@ -1198,11 +1198,11 @@ endfunc
 function x265_pixel_satd_8x64_neon
     vpush           {d8-d11}
     mov             ip, lr
-    bl              x265_satd_8x8_neon
+    bl              _x265_satd_8x8_neon
     vadd.u16        q4, q12, q13
     vadd.u16        q5, q14, q15
 .rept 7
-    bl              x265_satd_8x8_neon
+    bl              _x265_satd_8x8_neon
     vadd.u16        q4, q4, q12
     vadd.u16        q5, q5, q13
     vadd.u16        q4, q4, q14
@@ -1457,7 +1457,7 @@ function x265_pixel_satd_24x32_neon
     veor            q4, q4
     veor            q5, q5
 .rept 4
-    bl              x265_satd_8x8_neon
+    bl              _x265_satd_8x8_neon
     vadd.u16        q4, q4, q12
     vadd.u16        q5, q5, q13
     vadd.u16        q4, q4, q14
@@ -1490,7 +1490,7 @@ function x265_pixel_satd_24x64_neon
     veor            q4, q4
     veor            q5, q5
 .rept 4
-    bl              x265_satd_8x8_neon
+    bl              _x265_satd_8x8_neon
     vadd.u16        q4, q4, q12
     vadd.u16        q5, q5, q13
     vadd.u16        q4, q4, q14
@@ -1516,7 +1516,7 @@ function x265_pixel_satd_24x64_neon
     veor            q4, q4
     veor            q5, q5
 .rept 4
-    bl              x265_satd_8x8_neon
+    bl              _x265_satd_8x8_neon
     vadd.u16        q4, q4, q12
     vadd.u16        q5, q5, q13
     vadd.u16        q4, q4, q14

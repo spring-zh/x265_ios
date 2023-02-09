@@ -27,6 +27,13 @@
 
 .syntax unified
 
+#ifdef __APPLE__
+#define PREFIX 1
+#endif
+
+#define PFX3(prefix, name) prefix ## name
+#define PFX(prefix, name) PFX3(EXTERN_ASM, name)
+
 #if   HAVE_NEON
         .arch           armv7-a
 #elif HAVE_ARMV6T2

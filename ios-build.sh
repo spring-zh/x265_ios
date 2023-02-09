@@ -3,23 +3,11 @@
 # use xcode -G Xcode -T "buildsystem=1"
 # cmake --build ios_arm64 --config Release
 
-COMPILE_ARCHS=("arm64" "x86_64")
+COMPILE_ARCHS=("arm64" "armv7" "x86_64")
 
 SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 OUTDIR="$SCRIPT_PATH/out"
 
-if [ ! `which yasm` ]
-then
-    echo 'Yasm not found'
-    if [ ! `which brew` ]
-    then
-        echo 'Homebrew not found. Trying to install...'
-                    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" \
-            || exit 1
-    fi
-    echo 'Trying to install Yasm...'
-    brew install yasm || exit 1
-fi
 if [ ! `which gas-preprocessor.pl` ]
 then
     echo 'gas-preprocessor.pl not found. Trying to install...'
@@ -42,7 +30,7 @@ do
         ;;
     armv7)
         ASM_COMPILER="gas-preprocessor.pl -arch arm -- xcrun -sdk iphoneos clang -O3 -arch armv7"
-        IOS_PLATFORM="OS"
+        IOS_PLATFORM="OSV7"
         SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"
         ;;
     x86_64)
@@ -68,8 +56,8 @@ do
     -DENABLE_BITCODE=NO \
     -DDEPLOYMENT_TARGET=9.0 \
     -DCMAKE_ASM_NASM_FLAGS=-w-macro-params-legacy \
-    -DENABLE_SHARED=OFF \
     -DASM_COMPILER="$ASM_COMPILER" \
+    # -DENABLE_SHARED=OFF \
     # -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=7J5XWXBPXY \
 
     pushd $BUILD_PATH
